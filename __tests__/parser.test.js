@@ -6,7 +6,17 @@ const parse = require("../src/parser.js").parse;
 
 describe('Parser Tests', () => {
   describe('Basic number parsing', () => {
-    test('should parse single numbers', () => {
+    test('Reconoce números en punto flotante y notación científica', () => {
+  	expect(parser.parse("2.35 + 1")).toBe(3.35);
+  	expect(parser.parse("2.35e3 + 0")).toBe(2350);
+  	expect(parser.parse("2.35E-3 + 0")).toBe(0.00235);
+    });
+
+     test('Ignora los comentarios de una línea', () => {
+  	expect(parser.parse("5 + 5 // esto es una suma")).toBe(10);
+     });
+
+	  test('should parse single numbers', () => {
       expect(parse("42")).toBe(42);
       expect(parse("0")).toBe(0);
       expect(parse("123")).toBe(123);
