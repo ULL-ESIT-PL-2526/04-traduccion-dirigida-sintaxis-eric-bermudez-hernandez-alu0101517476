@@ -2,8 +2,8 @@
 %lex
 %%
 \s+                   { /* skip whitespace */; }
-"//".* { /* skip single line comments */ }
-[0-9]+"."[0-9]+)?([eE][-+]?[0-9]+)?\b { return 'NUMBER';       }
+\/\/.* { /* skip single line comments */ }
+[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?\b { return 'NUMBER';       }
 "**"                  { return 'OP';           }
 [-+*/]                { return 'OP';           }
 <<EOF>>               { return 'EOF';          }
