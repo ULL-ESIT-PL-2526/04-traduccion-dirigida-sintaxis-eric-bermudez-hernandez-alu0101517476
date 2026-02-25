@@ -3,7 +3,7 @@
 %%
 \s+                   { /* skip whitespace */; }
 "//".* { /* skip single line comments */ }
-[0-9]+                { return 'NUMBER';       }
+[0-9]+"."[0-9]+)?([eE][-+]?[0-9]+)?\b { return 'NUMBER';       }
 "**"                  { return 'OP';           }
 [-+*/]                { return 'OP';           }
 <<EOF>>               { return 'EOF';          }
