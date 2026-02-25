@@ -6,7 +6,17 @@ const parse = require("../src/parser.js").parse;
 
 describe('Parser Tests', () => {
   describe('Basic number parsing', () => {
-    test('should parse single numbers', () => {
+    test('Reconoce números en punto flotante y notación científica', () => {
+  	expect(parse("2.35 + 1")).toBe(3.35);
+  	expect(parse("2.35e3 + 0")).toBe(2350);
+  	expect(parse("2.35E-3 + 0")).toBe(0.00235);
+    });
+
+     test('Ignora los comentarios de una línea', () => {
+  	expect(parse("5 + 5 // esto es una suma")).toBe(10);
+     });
+
+	  test('should parse single numbers', () => {
       expect(parse("42")).toBe(42);
       expect(parse("0")).toBe(0);
       expect(parse("123")).toBe(123);
@@ -110,7 +120,7 @@ describe('Parser Tests', () => {
       expect(() => parse("3 +")).toThrow();
       expect(() => parse("+ 3")).toThrow();
       expect(() => parse("3 + + 4")).toThrow();
-      expect(() => parse("3.5")).toThrow(); // Only integers are supported
+      // expect(() => parse("3.5")).toThrow(); // Only integers are supported
     });
 
     test('should handle incomplete expressions', () => {
