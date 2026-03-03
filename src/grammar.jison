@@ -1,44 +1,44 @@
 /* Lexer */
 %lex
 %%
-\s+                   { /* skip whitespace */; }
-\/\/.* { /* skip single line comments */ }
-[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?\b { return 'NUMBER';       }
-"**"                  { return 'OP';           }
-[-+*/]                { return 'OP';           }
-<<EOF>>               { return 'EOF';          }
-.                     { return 'INVALID';      }
+
+\s+                                   { /* skip whitespace */ }
+\/\/.*                                { /* skip single line comments */ }
+\/\*[^]*?\*\/                          { /* skip multi-line comments */ }
+[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?\b { return 'NUMBER'; }
+"**"                                  { return '**'; }
+[-+*/]                                { return yytext; }
+<<EOF>>                               { return 'EOF'; }
+.                                     { return 'INVALID'; }
+
 /lex
 
 /* Parser */
+
+/* Declaramos la precedencia de menor a mayor prioridad */
+%left '+' '-'
+%left '*' '/'
+%right '**'
+
 %start expressions
-%token NUMBER
 %%
 
 expressions
     : expression EOF
-        { return $expression; }
+        { return $1; }
     ;
 
 expression
-    : expression OP term
-        { $$ = operate($OP, $expression, $term); }
-    | term
-        { $$ = $term; }
-    ;
-
-term
-    : NUMBER
+    : expression '+' expression
+        { $$ = $1 + $3; }
+    | expression '-' expression
+        { $$ = $1 - $3; }
+    | expression '*' expression
+        { $$ = $1 * $3; }
+    | expression '/' expression
+        { $$ = $1 / $3; }
+    | expression '**' expression
+        { $$ = Math.pow($1, $3); }
+    | NUMBER
         { $$ = Number(yytext); }
     ;
-%%
-
-function operate(op, left, right) {
-    switch (op) {
-        case '+': return left + right;
-        case '-': return left - right;
-        case '*': return left * right;
-        case '/': return left / right;
-        case '**': return Math.pow(left, right);
-    }
-}
