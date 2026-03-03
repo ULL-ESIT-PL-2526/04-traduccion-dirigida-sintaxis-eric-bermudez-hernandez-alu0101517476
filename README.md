@@ -1,8 +1,13 @@
 # Práctica de Laboratorio #4: Traducción dirigida por la sintaxis: léxicos
 
-**Universidad de La Laguna** **Escuela Superior de Ingeniería y Tecnología** **Grado en Ingeniería Informática** **Asignatura:** Procesadores de Lenguajes
+**Universidad de La Laguna** **Escuela Superior de Ingeniería y Tecnología** **Grado en Ingeniería Informática** 
+
+**Asignatura:** Procesadores de Lenguajes
+
 **Curso:** 2025/2026
+
 **Alumno:** Eric Bermúdez Hernández (alu0101517476)
+
 **Correo:** alu0101517476@ull.edu.es
 
 ---
@@ -68,3 +73,24 @@ El token `EOF` (End Of File) se devuelve cuando el analizador léxico detecta qu
 
 ### 3.5. Explique por qué existe la regla que devuelve `INVALID`.
 Actúa como una regla de seguridad ("catch-all"). Si el lexer encuentra un carácter que no coincide con ninguna de las reglas válidas anteriores (números, operadores, espacios), ejecutará esta regla. Esto permite lanzar un error o manejar la situación de forma controlada en lugar de que el programa falle de forma impredecible.
+
+---
+
+# Práctica de Laboratorio #5: Traducción dirigida por la sintaxis: gramática Archivo
+
+Se nos proporciona la definición de una gramática simple la cual es la siguiente:
+
+$L \rightarrow E \text{ eof}$
+
+$E \rightarrow E \text{ op } T$
+
+$E \rightarrow T$
+
+$T \rightarrow \text{number}$
+
+Esta gramática es recursiva por la izquierda para todos los operadores `op`, lo que significa que agrupa siempre las operaciones de izquierda a derecha, sin importar si es suma, resta, multiplicación o potencia.
+
+1. Partiendo de la gramática y las siguientes frases 4.0-2.0*3.0, 2**3**2 y 7-4/2:
+
+1.1 Escriba la derivación para cada una de las frases.
+
