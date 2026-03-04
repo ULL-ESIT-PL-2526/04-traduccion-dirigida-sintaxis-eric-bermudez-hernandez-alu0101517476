@@ -98,4 +98,138 @@ Esta gramática es recursiva por la izquierda para todos los operadores `op`, lo
 
 En un analizador ascendente (Bottom-Up) como Jison, se construye la derivación por la derecha en orden inverso:
 
-L ⇒ E eof ⇒ E op T eof (aquí op es *) ⇒ E op number(3.0) eof ⇒ E op T op number(3.0) eof (aquí el primer op es -) ⇒ E op number(2.0) op number(3.0) eof  ⇒ T op number(2.0) op number(3.0) eof ⇒ number(4.0) op number(2.0) op number(3.0) eof
+1. L ⇒ E eof
+
+2. ⇒ E op T eof (aquí op es *)
+
+3. ⇒ E op number(3.0) eof
+
+4. ⇒ E op T op number(3.0) eof (aquí el primer op es -)
+
+5. ⇒ E op number(2.0) op number(3.0) eof
+
+6. ⇒ T op number(2.0) op number(3.0) eof
+
+7. ⇒ number(4.0) op number(2.0) op number(3.0) eof
+
+1.2. Escriba el árbol de análisis sintáctico (parse tree) para cada una de las frases.
+
+Árbol de Análisis Sintáctico:
+            L
+          /   \
+         E     eof
+       / | \
+      E op(*) T
+    / | \     |
+   E op(-) T number(3.0)
+   |       |
+   T   number(2.0)
+   |
+number(4.0)
+
+1.3. ¿En qué orden se evaluan las acciones semánticas para cada una de las frases?
+Nótese que la evaluación a la que da lugar la sdd para las frases no se corresponde con los convenios de evaluación establecidos en matemáticas y los lenguajes de programación.
+
+Las acciones se evalúan de abajo hacia arriba y de izquierda a derecha de la siguiente forma:
+
+- Frase: `4.0-2.0*3.0`
+
+1. Se convierte "4.0" en número (T → number).
+
+2. Se convierte "2.0" en número (T → number).
+
+3. Se evalúa la resta: `operate('-', 4.0, 2.0)` dando como resultado `2.0` (E → E op T).
+
+4. Se convierte `3.0` en número (T → number).
+
+5. Se evalúa la multiplicación: `operate('*', 2.0, 3.0)` dando como resultado final `6.0` (E → E op T).
+
+- Frase: `2**3**2`
+
+- Derivación por la derecha:
+
+1. L ⇒ E eof
+
+2. ⇒ E op T eof (aquí op es el segundo `**`)
+
+3. ⇒ E op number(2) eof
+
+4. ⇒ E op T op number(2) eof (aquí el primer op es el primer `**`)
+
+5. ⇒ E op number(3) op number(2) eof
+
+6. ⇒ T op number(3) op number(2) eof
+
+7. ⇒ number(2) op number(3) op number(2) eof
+
+- Árbol de Análisis Sintáctico (Parse Tree)
+
+            L
+          /   \
+         E     eof
+       / | \
+      E op(**) T
+    / | \      |
+   E op(**) T number(2)
+   |        |
+   T     number(3)
+   |
+number(2)
+
+- Orden de evaluación de las acciones semánticas
+
+1. Se convierte el primer `2` en un número. 
+
+2. Se convierte el 3 en un número.
+
+3. Se evalúa la primera potencia: `operate('**', 2, 3)` dando como resultado 8 (2^3).
+
+4. Se convierte el último `2` en número.ç
+
+5. Se evalúa la segunda potencia: `operate('**', 8, 2)` dando como resultado final `64` (8^2).
+(Orden: Se asocian de izquierda a derecha en lugar de derecha a izquierda, por lo que el resultado difiere de la convención matemática 2(32)=512).
+
+- Frase C: `7 - 4 / 2`
+
+1.1 Derivación (Por la derecha)
+
+1. L ⇒ E eof 
+
+2. ⇒ E op T eof (aquí op es /)
+
+3. ⇒ E op number(2) eof
+
+4. ⇒ E op T op number(2) eof (aquí el primer op es -)
+
+5. ⇒ E op number(4) op number(2) eof
+
+6. ⇒ T op number(4) op number(2) eof
+
+7. ⇒ number(7) op number(4) op number(2) eof
+
+1.2. Árbol de Análisis Sintáctico (Parse Tree)
+
+            L
+          /   \
+         E     eof
+       / | \
+      E op(/) T
+    / | \     |
+   E op(-) T number(2)
+   |       |
+   T    number(4)
+   |
+number(7)
+
+1.3 Orden de evaluación de las acciones semánticas
+
+1. Se convierte `7` en número.
+
+2. Se convierte `4` en número.
+
+3. Se evalúa la resta: `operate('-', 7, 4)` dando como resultado `3`.
+
+4. Se convierte `2` en número.
+
+5. Se evalúa la división: `operate('/', 3, 2)` dando como resultado final `1.5`.
+(Orden: Primero la resta, luego la división. Matemáticamente incorrecto, pero sintácticamente correcto para esta gramática inicial).
