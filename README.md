@@ -94,3 +94,8 @@ Esta gramática es recursiva por la izquierda para todos los operadores `op`, lo
 
 1.1 Escriba la derivación para cada una de las frases.
 
+- Derivación por la derecha
+
+En un analizador ascendente (Bottom-Up) como Jison, se construye la derivación por la derecha en orden inverso:
+
+L ⇒ E eof ⇒ E op T eof (aquí op es *) ⇒ E op number(3.0) eof ⇒ E op T op number(3.0) eof (aquí el primer op es -) ⇒ E op number(2.0) op number(3.0) eof  ⇒ T op number(2.0) op number(3.0) eof ⇒ number(4.0) op number(2.0) op number(3.0) eof
