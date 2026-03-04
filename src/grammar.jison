@@ -20,24 +20,43 @@
 
 /* Parser */
 %start expressions
-%token NUMBER
 %%
 
 expressions
-    : expression EOF
-        { return $expression; }
+    : E EOF
+        { return $1; }
     ;
 
-expression
-    : expression OP term
-        { $$ = operate($OP, $expression, $term); }
-    | term
-        { $$ = $term; }
+/* Sumas y Restas (Asociatividad Izquierda) */
+E
+    : E OPAD T
+        { $$ = operate($OPAD, $E, $T); }
+    | T
+        { $$ = $T; }
     ;
 
-term
+/* Multiplicaciones y Divisiones (Asociatividad Izquierda) */
+T
+    : T OPMU R
+        { $$ = operate($OPMU, $T, $R); }
+    | R
+        { $$ = $R; }
+    ;
+
+/* Potencias (Asociatividad Derecha) */
+R
+    : F OPOW R
+        { $$ = operate($OPOW, $F, $R); }
+    | F
+        { $$ = $F; }
+    ;
+
+/* Números y Paréntesis */
+F
     : NUMBER
         { $$ = Number(yytext); }
+    | '(' E ')'
+        { $$ = $E; }
     ;
 %%
 
