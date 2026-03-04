@@ -1,13 +1,21 @@
 /* Lexer */
 %lex
 %%
-\s+                   { /* skip whitespace */; }
-\/\/.* { /* skip single line comments */ }
-[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?\b { return 'NUMBER';       }
-"**"                  { return 'OP';           }
-[-+*/]                { return 'OP';           }
-<<EOF>>               { return 'EOF';          }
-.                     { return 'INVALID';      }
+\s+                                     { /* skip whitespace */ }
+\/\/.*                                  { /* skip single line comments */ }
+[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?\b   { return 'NUMBER'; }
+
+/* Nuevos operadores clasificados por prioridad */
+"**"                                    { return 'OPOW'; }
+[*/]                                    { return 'OPMU'; }
+[-+]                                    { return 'OPAD'; }
+
+/* Paréntesis */
+"("                                     { return '('; }
+")"                                     { return ')'; }
+
+<<EOF>>                                 { return 'EOF'; }
+.                                       { return 'INVALID'; }
 /lex
 
 /* Parser */
