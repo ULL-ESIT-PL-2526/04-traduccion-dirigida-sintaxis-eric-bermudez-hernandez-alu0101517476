@@ -39,4 +39,19 @@ describe('Parser Failing Tests', () => {
         expect(parse("100 - 50 + 25")).toBe(75); // (100 - 50) + 25 = 75
         expect(parse("2 * 3 + 4 * 5")).toBe(26); // (2 * 3) + (4 * 5) = 26
     });
+
+    describe('Nuevas funcionalidades: Paréntesis y Flotantes', () => {
+        test('Respeta precedencia con números flotantes', () => {
+            expect(parse("2.5 + 2.0 * 3.0")).toBe(8.5);
+            expect(parse("10.0 - 4.5 / 2.0")).toBe(7.75);
+        });
+
+        test('Evalúa correctamente expresiones entre paréntesis', () => {
+            expect(parse("(2 + 3) * 4")).toBe(20);
+            expect(parse("10 / (2 + 3)")).toBe(2);
+            expect(parse("2 ** (3 ** 2)")).toBe(512);
+            expect(parse("(2 ** 3) ** 2")).toBe(64);
+            expect(parse("((1 + 2) * 3) - 4")).toBe(5);
+        });
+    });
 });
